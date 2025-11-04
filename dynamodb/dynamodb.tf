@@ -1,6 +1,6 @@
 # dynamodb.tf
 resource "aws_dynamodb_table" "esp32_data" {
-  name           = "esp32-data-table_terraform"
+  name           = var.nombre_tabla_dynamo
   billing_mode   = "PAY_PER_REQUEST"
   hash_key       = "nodo_id"    # Partition key
   range_key      = "request_time" # Sorting key

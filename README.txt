@@ -1,7 +1,7 @@
 Remove-Item -Recurse -Force .terraform, .terraform.lock.hcl, terraform.tfstate, terraform.tfstate.backup
 
 
-CUIDADO esp32-data-table_terraform -
+
 
 0. Introducir credenciales AWS:
     - $env:AWS_ACCESS_KEY_ID = "AKIAWCL6WLJQQKNGIIXG"
