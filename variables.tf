@@ -1,6 +1,32 @@
 # variables.tf
+variable "nombre_lambda_rol" {
+  description = "S3 bucket to store Lambda code"
+  type        = string
+}
+
+variable "nombre_funcion_lambda" {
+  description = "Nombre literal de la función lambda"
+  type        = string
+}
+
 variable "lambda_code_bucket" {
   description = "S3 bucket to store Lambda code"
+  type        = string
+}
+
+variable "lambda_code_key" {
+  description = "S3 bucket to store Lambda code"
+  type        = string
+}
+
+variable "nombre_api" {
+  description = "Nombre literal de la API"
+  type        = string
+}
+
+
+variable "nombre_tabla_dynamo" {
+  description = "Nombre literal de la tabla DynamoDB"
   type        = string
 }
 

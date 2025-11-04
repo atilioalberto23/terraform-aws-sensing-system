@@ -1,3 +1,8 @@
+variable "nombre_api" {
+  description = "Nombre literal de la API"
+  type        = string
+}
+
 variable "lambda_function_arn" {
   description = "ARN de la función Lambda existente"
   type        = string

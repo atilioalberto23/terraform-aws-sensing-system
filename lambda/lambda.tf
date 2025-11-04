@@ -5,7 +5,7 @@ provider "aws" {
 
 # lambda.tf
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda-role-terraform-v4"
+  name = var.nombre_lambda_rol
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -33,7 +33,7 @@ resource "aws_iam_policy" "lambda_s3_policy" {
           "s3:PutObject"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:s3:::terraform-pruebas-lambda/*"
+        Resource = "arn:aws:s3:::${var.lambda_code_bucket}/*"
       }
     ]
   })
@@ -73,14 +73,14 @@ resource "aws_iam_role_policy_attachment" "lambda_attach_dynamodb" {
 
 
 resource "aws_lambda_function" "lambda_function" {
-  function_name = "esp32-lambda-v4"
+  function_name = var.nombre_funcion_lambda
   role          = aws_iam_role.lambda_role.arn
-  handler       = "codigo-lambda.lambda_handler"
+  handler       = "${var.lambda_code_key}.lambda_handler"
   runtime       = "python3.10"
 
   # Cargar código Lambda desde un bucket S3
-  s3_bucket = "terraform-pruebas-lambda"
-  s3_key    = "codigo-lambda.zip"
+  s3_bucket = var.lambda_code_bucket
+  s3_key    = "${var.lambda_code_key}.zip"
 }
 
 
