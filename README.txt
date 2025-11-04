@@ -19,3 +19,5 @@ Para destruir la infraestructura:
 1. Hacer, si no se ha hecho: "terraform init"
 2. Ejecutar "terraform plan -destroy"
 3. Ejecutar "terraform destroy"
+
+SIEMPRE DESTRUIR LA INFRAESTRUCTURA ANTES DE ENVIAR UN COMMIT A DEVELOP Y REMOVER ARHCHIVOS .tfstate y .backup
