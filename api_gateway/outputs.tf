@@ -5,7 +5,7 @@ output "api_gateway_url" {
 }
 
 output "api_invoke_url" {
-  value = "https://${aws_api_gateway_rest_api.esp32_api.id}.execute-api.us-east-1.amazonaws.com/prod/esp32"
+  value = "https://${aws_api_gateway_rest_api.esp32_api.id}.execute-api.us-east-1.amazonaws.com/prod/data"
   description = "Invoke URL for the ESP32 API"
 }
 
