@@ -5,7 +5,7 @@ provider "aws" {
   region = "us-east-1" # Cambia según tu región
 }
 
-#comentarios
+
 # Referencia a las variables
 module "lambda" {
   source = "./lambda"
