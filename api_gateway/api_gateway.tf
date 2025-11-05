@@ -3,7 +3,7 @@
 
 # api_gateway.tf
 resource "aws_api_gateway_rest_api" "esp32_api" {
-  name        = "esp32-api"
+  name        = var.nombre_api
   description = "API para recibir datos desde ESP32"
 }
 
