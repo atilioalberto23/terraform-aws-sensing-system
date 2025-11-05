@@ -4,6 +4,8 @@ provider "aws" {
 
 
 # lambda.tf
+
+#Se crea el rol para la lambda. La misma (lambda) debe ser capaz de asumir el rol.
 resource "aws_iam_role" "lambda_role" {
   name = var.nombre_lambda_rol
 
@@ -21,6 +23,7 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
+#Policy que le permite a la lambda accesar al bucket de S3 que contiene el código
 resource "aws_iam_policy" "lambda_s3_policy" {
   name        = "lambda-s3-policy"
   description = "Permite acceso a S3 para la Lambda"
@@ -40,6 +43,7 @@ resource "aws_iam_policy" "lambda_s3_policy" {
 
 }
 
+#Se crea la politica para que la lambda pueda acceder a la tabla DynamoDB
 resource "aws_iam_policy" "lambda_dynamodb_policy" {
   name        = "lambda-dynamodb-policy"
   description = "Permite a Lambda escribir en la tabla DynamoDB creada por Terraform"
@@ -60,18 +64,20 @@ resource "aws_iam_policy" "lambda_dynamodb_policy" {
   })
 }
 
-
+#Se anexa la policy que permite el acceso a S3, a la lambda, al rol creado para la lambda.
 resource "aws_iam_role_policy_attachment" "lambda_attach_s3" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.lambda_s3_policy.arn
 }
 
+
+#Se anexa la policy que permite el acceso a DynamoDB, a la lambda, al rol creado para la lambda.
 resource "aws_iam_role_policy_attachment" "lambda_attach_dynamodb" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.lambda_dynamodb_policy.arn
 }
 
-
+#Se crea la funcion lambda y se le adjunta el rol que da acceso a S3, DynamoDB y le permite asumir el rol.
 resource "aws_lambda_function" "lambda_function" {
   function_name = var.nombre_funcion_lambda
   role          = aws_iam_role.lambda_role.arn
