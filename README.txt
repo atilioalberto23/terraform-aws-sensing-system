@@ -1,7 +1,8 @@
 Remove-Item -Recurse -Force .terraform, .terraform.lock.hcl, terraform.tfstate, terraform.tfstate.backup
 
 
-
+0.1 Crear usuario en S3 para acceder mediante terraform
+0.2 Crear bucket con objeto lambda.py
 
 0. Introducir credenciales AWS:
     - $env:AWS_ACCESS_KEY_ID = "AKIAWCL6WLJQQKNGIIXG"
@@ -21,3 +22,10 @@ Para destruir la infraestructura:
 3. Ejecutar "terraform destroy"
 
 SIEMPRE DESTRUIR LA INFRAESTRUCTURA ANTES DE ENVIAR UN COMMIT A DEVELOP Y REMOVER ARHCHIVOS .tfstate y .backup
+
+
+RECORDAR:
+
+1. Actualizar código de la lambda.py para que coincida con el nombre de la tabla dynamo.
+2. Actualizar código de la esp32.c para que coincida con el http url de la api.
+
