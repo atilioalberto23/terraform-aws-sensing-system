@@ -1,8 +1,11 @@
-# Ignorar archivos y carpetas de Terraform
+# Terraform
 .terraform/
+.terraform.lock.hcl
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
 crash.log
 *.tfvars
-*.zip
-*.exe
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
