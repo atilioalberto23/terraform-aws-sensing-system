@@ -87,6 +87,41 @@ resource "aws_lambda_function" "lambda_function" {
   # Cargar código Lambda desde un bucket S3
   s3_bucket = var.lambda_code_bucket
   s3_key    = "${var.lambda_code_key}.zip"
+
+  environment {
+    variables = {
+      DYNAMODB_TABLE = var.table_name
+    }
+  }
 }
+
+
+
+###//////////////// REPLICACIÓN A S3 DYNAMODB //////////////////###
+
+
+resource "aws_lambda_function" "save_to_s3" {
+  function_name    = "saveToS3"
+  role             = aws_iam_role.lambda_execution_role.arn
+  handler          = "lambda_function.lambda_handler"  # Nombre de la función manejadora en Python
+  runtime          = "python3.10"
+
+  s3_bucket = var.lambda_code_bucket
+  s3_key = "${var.lambda_dynamodb_replica_key}.zip"
+
+  environment {
+    variables = {
+      BUCKET_NAME = var.bucket_raw_parquet  # El bucket de S3 donde guardamos los datos Parquet
+    }
+  }
+}
+
+
+
+
+
+
+
+
 
 

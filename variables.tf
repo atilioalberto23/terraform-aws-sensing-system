@@ -30,7 +30,24 @@ variable "nombre_tabla_dynamo" {
   type        = string
 }
 
+
 variable "region" {
   description = "AWS Region"
   default     = "us-east-1"
 }
+
+
+
+###//////////////// REPLICACIÓN A S3 DYNAMODB //////////////////###
+
+variable "lambda_dynamodb_replica_key" {
+  description = "S3 bucket to store Lambda code"
+  type        = string
+}
+
+variable "bucket_raw_parquet_data" {
+  description = "Nombre literal del bucket donde se replicará la data en formato parquet"
+  type        = string
+}
+
+

@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 
 # Inicializar recursos
 dynamodb = boto3.resource('dynamodb')
-TABLE_NAME = os.environ.get('TABLE_NAME', 'esp32-sensing-system-table')
+TABLE_NAME = os.environ['DYNAMODB_TABLE']
 table = dynamodb.Table(TABLE_NAME)
 
 def iso_utc_now():

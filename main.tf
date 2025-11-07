@@ -13,8 +13,10 @@ module "lambda" {
   nombre_funcion_lambda = var.nombre_funcion_lambda
   lambda_code_bucket = var.lambda_code_bucket
   lambda_code_key = var.lambda_code_key
+  lambda_dynamodb_replica_key = var.lambda_dynamodb_replica_key
   table_arn   = module.dynamodb.table_arn
   table_name  = module.dynamodb.table_name
+  bucket_raw_parquet = module.s3_bucket.bucket_raw_parquet
 }
 
 module "api_gateway" {
@@ -25,10 +27,20 @@ module "api_gateway" {
   lambda_invoke_arn = module.lambda.lambda_invoke_arn
 }
 
+
+
 module "dynamodb" {
   source = "./dynamodb"
   nombre_tabla_dynamo = var.nombre_tabla_dynamo
+  lambda_replication_name  = module.lambda.lambda_replication_name
 }
+
+module "s3_bucket" {
+  source = "./s3_bucket"
+  bucket_raw_parquet_data = var.bucket_raw_parquet_data
+
+}
+
 
 
 
