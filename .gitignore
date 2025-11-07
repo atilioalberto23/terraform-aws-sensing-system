@@ -1,0 +1,8 @@
+# Ignorar archivos y carpetas de Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+crash.log
+*.tfvars
+*.zip
+*.exe
