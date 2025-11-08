@@ -169,6 +169,31 @@ resource "aws_iam_policy" "lambda_dynamodb_policy_replicacion" {
   })
 }
 
+
+resource "aws_iam_policy" "lambda_dynamodb_stream_policy" {
+  name        = "lambda-dynamodb-stream-policy"
+  description = "Permite acceso a los streams de DynamoDB desde Lambda"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = [
+          "dynamodb:DescribeStream",
+          "dynamodb:GetRecords",
+          "dynamodb:GetShardIterator",
+          "dynamodb:ListStreams"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:dynamodb:us-east-1:417414404705:table/${var.table_name}/stream/*"
+      }
+    ]
+  })
+}
+
+
+
+
+
 #Se anexa la policy que permite el acceso a S3, a la lambda, al rol creado para la lambda.
 resource "aws_iam_role_policy_attachment" "lambda_attach_s3_replicacion" {
   role       = aws_iam_role.lambda_role_replication.name
@@ -180,6 +205,11 @@ resource "aws_iam_role_policy_attachment" "lambda_attach_s3_replicacion" {
 resource "aws_iam_role_policy_attachment" "lambda_attach_dynamodb_s3_replicacion" {
   role       = aws_iam_role.lambda_role_replication.name
   policy_arn = aws_iam_policy.lambda_dynamodb_policy_replicacion.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_attach_dynamodb_stream_policy" {
+  role       = aws_iam_role.lambda_role_replication.name
+  policy_arn = aws_iam_policy.lambda_dynamodb_stream_policy.arn
 }
 
 

@@ -3,35 +3,43 @@ import boto3
 import time
 import os
 import uuid
-import pyarrow as pa
-import pyarrow.parquet as pq
 
 # Cliente de S3 para interactuar con el bucket
-s3 = boto3.client('s3_bucket')
+s3 = boto3.client('s3')
 bucket = os.environ['BUCKET_NAME']  # El nombre del bucket se pasa como variable de entorno
 
+
 def lambda_handler(event, context):
-    timestamp = int(time.time())
-    for record in event['Records']:
-        if record['eventName'] == 'INSERT':
-            # Extraer el nuevo ítem desde DynamoDB Stream
-            new_item = record['dynamodb']['NewImage']
-            data = {k: list(v.values())[0] for k, v in new_item.items()}
+    try:
+        # Verificar que el evento contiene la clave 'Records'
+        if 'Records' not in event:
+            raise ValueError("El evento no contiene la clave 'Records'")
 
-            # Generar un ID único para este registro, usando UUID basado en el payload (para asegurar unicidad)
-            unique_id = str(data['payload']['msr_prd_id'])  # Usamos el 'payload' para generar un UUID
+        timestamp = int(time.time())  # Timestamp para diferenciar las escrituras
 
-            # Crear el nombre del archivo para S3: "nodo_id/unique_id.parquet"
-            file_name = f"data/{data['nodo_id']}/{unique_id}.parquet"
+        for record in event['Records']:
+            if record['eventName'] == 'INSERT':  # Solo procesamos los eventos de inserción
+                # Extraer el nuevo ítem desde DynamoDB Stream
+                new_item = record['dynamodb']['NewImage']
+                data = {k: list(v.values())[0] for k, v in new_item.items()}
 
-            # Convertir los datos a formato Parquet usando PyArrow
-            table = pa.table(data)  # Usamos PyArrow para crear la tabla
+                # Generar un ID único para este registro usando 'nodo_id' y 'msr_prd_id' del payload
+                unique_id = f"{data['nodo_id']}_{data['payload']['msr_prd_id']}_{timestamp}"  # ID único con timestamp
+                print(f"Generando archivo para: {unique_id}")
 
-            # Guardamos los datos en un archivo Parquet temporal
-            with open("/tmp/temp.parquet", "wb") as f:
-                pq.write_table(table, f)
+                # Crear el nombre del archivo para S3: "nodo_id/unique_id.json"
+                file_name = f"data/{data['nodo_id']}/{unique_id}.json"
 
-            # Subimos el archivo Parquet a S3 en la ruta especificada
-            s3.upload_file("/tmp/temp.parquet", bucket, file_name)
+                # Convertir los datos en un formato JSON (DynamoDB devuelve los datos como JSON)
+                json_data = json.dumps(data)
 
-    return {'statusCode': 200}
+                # Subir el archivo JSON a S3 en la ruta especificada
+                s3.put_object(Bucket=bucket, Key=file_name, Body=json_data)
+
+                print(f"Archivo guardado en S3: {file_name}")
+
+        return {'statusCode': 200, 'body': 'Success'}
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return {'statusCode': 500, 'body': f"Error: {str(e)}"}
