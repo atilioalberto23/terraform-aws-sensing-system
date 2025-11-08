@@ -52,6 +52,7 @@ void loop() {
     doc["request_time"] = getISO8601Time();
 
     JsonObject payload = doc.createNestedObject("payload");
+    payload["msr_prd_id"] = 20250302115930;
     payload["temperature"] = 23.5;
     payload["humidity"] = 60.0;
 
