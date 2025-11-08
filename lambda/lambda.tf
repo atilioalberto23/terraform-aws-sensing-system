@@ -105,8 +105,8 @@ resource "aws_lambda_function" "lambda_function" {
 
 
 #Se crea el rol para la lambda. La misma (lambda) debe ser capaz de asumir el rol.
-resource "aws_iam_role" "lambda_role" {
-  name = var.nombre_lambda_rol
+resource "aws_iam_role" "lambda_role_replication" {
+  name = var.nombre_lambda_rol_replicacion
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -123,8 +123,8 @@ resource "aws_iam_role" "lambda_role" {
 }
 
 #Policy que le permite a la lambda accesar al bucket de S3 que contiene el código
-resource "aws_iam_policy" "lambda_s3_policy" {
-  name        = "lambda-s3-policy"
+resource "aws_iam_policy" "lambda_s3_policy_replicacion" {
+  name        = "lambda-s3-policy-replicacion"
   description = "Permite acceso a S3 para la Lambda"
   policy = jsonencode({
     Version = "2012-10-17"
@@ -136,23 +136,29 @@ resource "aws_iam_policy" "lambda_s3_policy" {
         ]
         Effect   = "Allow"
         Resource = "arn:aws:s3:::${var.lambda_code_bucket}/*"
+      },
+      {
+        Action   = [
+          "s3:GetObject",
+          "s3:PutObject"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:s3:::${var.bucket_raw_parquet}/*"
       }
     ]
   })
-
 }
 
+
 #Se crea la politica para que la lambda pueda acceder a la tabla DynamoDB
-resource "aws_iam_policy" "lambda_dynamodb_policy" {
-  name        = "lambda-dynamodb-policy"
-  description = "Permite a Lambda escribir en la tabla DynamoDB creada por Terraform"
+resource "aws_iam_policy" "lambda_dynamodb_policy_replicacion" {
+  name        = "lambda-dynamodb-policy-replicacion"
+  description = "Permite a Lambda leer la tabla DynamoDB creada por Terraform"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Action = [
-          "dynamodb:PutItem",
-          "dynamodb:UpdateItem",
           "dynamodb:GetItem"
         ]
         Effect = "Allow"
@@ -164,18 +170,17 @@ resource "aws_iam_policy" "lambda_dynamodb_policy" {
 }
 
 #Se anexa la policy que permite el acceso a S3, a la lambda, al rol creado para la lambda.
-resource "aws_iam_role_policy_attachment" "lambda_attach_s3" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.lambda_s3_policy.arn
+resource "aws_iam_role_policy_attachment" "lambda_attach_s3_replicacion" {
+  role       = aws_iam_role.lambda_role_replication.name
+  policy_arn = aws_iam_policy.lambda_s3_policy_replicacion.arn
 }
 
 
 #Se anexa la policy que permite el acceso a DynamoDB, a la lambda, al rol creado para la lambda.
-resource "aws_iam_role_policy_attachment" "lambda_attach_dynamodb" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.lambda_dynamodb_policy.arn
+resource "aws_iam_role_policy_attachment" "lambda_attach_dynamodb_s3_replicacion" {
+  role       = aws_iam_role.lambda_role_replication.name
+  policy_arn = aws_iam_policy.lambda_dynamodb_policy_replicacion.arn
 }
-
 
 
 
@@ -195,9 +200,9 @@ resource "aws_iam_role_policy_attachment" "lambda_attach_dynamodb" {
 
 
 resource "aws_lambda_function" "save_to_s3" {
-  function_name    = "saveToS3"
-  role             = aws_iam_role.lambda_execution_role_replicca.arn
-  handler          = "lambda_function.lambda_handler"  # Nombre de la función manejadora en Python
+  function_name    = var.nombre_funcion_lambda_replicacion
+  role             = aws_iam_role.lambda_role_replication.arn
+  handler          = "${var.lambda_dynamodb_replica_key}.lambda_handler"  # Nombre de la función manejadora en Python
   runtime          = "python3.10"
 
   s3_bucket = var.lambda_code_bucket

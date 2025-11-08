@@ -51,3 +51,13 @@ variable "bucket_raw_parquet_data" {
 }
 
 
+variable "nombre_lambda_rol_replicacion" {
+  description = "Nombre literal del rol de la lambda de replicacion"
+  type        = string
+}
+
+variable "nombre_funcion_lambda_replicacion" {
+  description = "Nombre literal de la lambda de replicacion"
+  type        = string
+}
+

@@ -17,6 +17,8 @@ module "lambda" {
   table_arn   = module.dynamodb.table_arn
   table_name  = module.dynamodb.table_name
   bucket_raw_parquet = module.s3_bucket.bucket_raw_parquet
+  nombre_lambda_rol_replicacion = var.nombre_lambda_rol_replicacion
+  nombre_funcion_lambda_replicacion = var.nombre_funcion_lambda_replicacion
 }
 
 module "api_gateway" {

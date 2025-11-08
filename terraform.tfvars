@@ -9,8 +9,9 @@ nombre_funcion_lambda = "api-dynamodb-lambdaFx"
 
 ###//////////////// REPLICACIÓN A S3 DYNAMODB //////////////////###
 lambda_dynamodb_replica_key = "codigo-lambda-dynamodb-streams"
-bucket_raw_parquet_data = "raw_00"
-
+bucket_raw_parquet_data = "raw-00-tmp-cs"
+nombre_lambda_rol_replicacion = "dynamodb-s3-lambdaFx-rol"
+nombre_funcion_lambda_replicacion = "dynamodb-s3-lambdaFx"
 
 
 
