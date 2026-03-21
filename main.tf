@@ -19,6 +19,7 @@ module "lambda" {
   bucket_raw_parquet = module.s3_bucket.bucket_raw_parquet
   nombre_lambda_rol_replicacion = var.nombre_lambda_rol_replicacion
   nombre_funcion_lambda_replicacion = var.nombre_funcion_lambda_replicacion
+  dynamodb_stream_arn = module.dynamodb.esp32_data_stream_arn
 }
 
 module "api_gateway" {

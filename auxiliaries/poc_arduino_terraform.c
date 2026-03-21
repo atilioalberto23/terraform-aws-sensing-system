@@ -8,7 +8,7 @@ const char* ssid = "COWIFI17517225/0";
 const char* password = "WiFi-85378219";
 
 // URL del endpoint de la API (revisa que termine con /data si así lo definiste)
-const char* serverName =  "https://0589jbp8le.execute-api.us-east-1.amazonaws.com/prod/data";
+const char* serverName =  "https://idrs8ehyzl.execute-api.us-east-1.amazonaws.com/prod/data";
 
 // Configurar NTP para obtener hora UTC
 const char* ntpServer = "pool.ntp.org";

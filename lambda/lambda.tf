@@ -184,7 +184,7 @@ resource "aws_iam_policy" "lambda_dynamodb_stream_policy" {
           "dynamodb:ListStreams"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:dynamodb:us-east-1:417414404705:table/${var.table_name}/stream/*"
+        Resource = var.dynamodb_stream_arn
       }
     ]
   })

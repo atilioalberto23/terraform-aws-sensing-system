@@ -51,3 +51,8 @@ variable "nombre_funcion_lambda_replicacion" {
   description = "Nombre literal de la función para la lambda de replicacion"
   type        = string
 }
+
+variable "dynamodb_stream_arn" {
+  type        = string
+  description = "ARN del DynamoDB Stream que Lambda usará"
+}
